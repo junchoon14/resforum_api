@@ -2,7 +2,6 @@ const restController = require('../controllers/restController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController.js')
 
-const fs = require('fs')
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
 
