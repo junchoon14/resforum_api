@@ -1,18 +1,19 @@
 const express = require('express')
-const handlebars = require('express-handlebars')
+const { create } = require('express-handlebars') //ver 6.0
+const hbs = create({
+  // partialsDir: 'views/partials',
+  defaultLayout: 'main',
+  // helpers: require('./config/hbs-helpers'),
+  extname: '.hbs'
+})
 const app = express()
 const port = 3000
 
-app.engine('.hbs', handlebars({
-  partialsDir: 'views/partials',
-  layoutsDir: 'views/layouts',
-  defaultLayout: 'main',
-  helpers: require('./config/hbs-helpers'),
-  extname: '.hbs'
-}))
-
+app.engine('.hbs', hbs.engine)
 app.set('view engine', '.hbs')
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}!`)
 })
+
+require('./routes')(app)
