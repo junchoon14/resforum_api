@@ -1,6 +1,6 @@
 'use strict';
 const bcrypt = require('bcryptjs')
-// const faker = require('faker')
+const { faker } = require('@faker-js/faker')
 
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -27,6 +27,21 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date()
       }], {})
+
+      return await queryInterface.bulkInsert('Restaurants',
+        Array.from({ length: 50 }).map(d =>
+        ({
+          name: faker.name.findName(),
+          tel: faker.phone.phoneNumber('+886-9##-###-###'),
+          address: faker.address.streetAddress(),
+          opening_hours: faker.time.recent('abbr'),
+          image: faker.image.imageUrl(),
+          description: faker.lorem.paragraph(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          // CategoryId: Math.floor(Math.random() * 5) + 1
+        })
+        ), {})
     } catch (err) {
       console.warn(err)
     }
@@ -34,7 +49,8 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     try {
-      return await queryInterface.bulkInsert('Users', null, {})
+      await queryInterface.bulkDelete('Users', null, {})
+      return await queryInterface.bulkDelete('Restaurants', null, {})
     } catch (err) {
       console.warn(err)
     }
