@@ -16,11 +16,13 @@ const adminController = {
   },
   createRestaurant: async (req, res) => {
     try {
-      const categories = await Category.findAll({
-        raw: true,
-        nest: true
+      // const categories = await Category.findAll({
+      //   raw: true,
+      //   nest: true
+      // })
+      return res.render('admin/create', {
+        //  categories 
       })
-      return res.render('admin/create', { categories })
     } catch (err) {
       console.warn(err)
     }
