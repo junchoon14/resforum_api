@@ -44,6 +44,18 @@ const adminController = {
         res.redirect('/admin/restaurants')
       })
   },
+  getRestaurant: async (req, res) => {
+    try {
+      const restaurant = await Restaurant.findByPk(req.params.id, {
+        raw: true,
+        nest: true,
+        // include: [Category] 
+      })
+      return res.render('admin/restaurant', { restaurant })
+    } catch (err) {
+      console.warn(err)
+    }
+  },
 }
 
 module.exports = adminController
