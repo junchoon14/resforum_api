@@ -17,6 +17,7 @@ const port = 3000
 
 app.engine('.hbs', hbs.engine)
 app.set('view engine', '.hbs')
+app.use('/upload', express.static(__dirname + '/upload'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }))
 app.use(passport.initialize())
