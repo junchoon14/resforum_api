@@ -7,11 +7,13 @@ const hbs = create({
   extname: '.hbs'
 })
 const db = require('./models')
+const bodyParser = require('body-parser')
 const app = express()
 const port = 3000
 
 app.engine('.hbs', hbs.engine)
 app.set('view engine', '.hbs')
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}!`)
