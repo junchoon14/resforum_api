@@ -82,7 +82,15 @@ const adminController = {
           })
       })
   },
-
+  deleteRestaurant: async (req, res) => {
+    try {
+      const restaurant = await Restaurant.findByPk(req.params.id)
+      await restaurant.destroy()
+      return res.redirect('/admin/restaurants')
+    } catch (err) {
+      console.warn(err)
+    }
+  },
 }
 
 module.exports = adminController
