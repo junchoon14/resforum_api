@@ -6,10 +6,11 @@ const hbs = create({
   // helpers: require('./config/hbs-helpers'),
   extname: '.hbs'
 })
-const db = require('./models')
 const bodyParser = require('body-parser')
 const flash = require('connect-flash')
 const session = require('express-session')
+const passport = require('./config/passport')
+const { Passport } = require('./config/passport')
 const app = express()
 const port = 3000
 
@@ -17,6 +18,8 @@ app.engine('.hbs', hbs.engine)
 app.set('view engine', '.hbs')
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }))
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(flash())
 
 app.use((req, res, next) => {
@@ -29,4 +32,4 @@ app.listen(port, () => {
   console.log(`App listening on port ${port}!`)
 })
 
-require('./routes')(app)
+require('./routes')(app, Passport)
