@@ -33,4 +33,4 @@ app.listen(port, () => {
   console.log(`App listening on port ${port}!`)
 })
 
-require('./routes')(app, Passport)
+require('./routes')(app, passport)
