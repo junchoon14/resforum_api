@@ -6,6 +6,7 @@ const hbs = create({
   // helpers: require('./config/hbs-helpers'),
   extname: '.hbs'
 })
+const db = require('./models')
 const app = express()
 const port = 3000
 
