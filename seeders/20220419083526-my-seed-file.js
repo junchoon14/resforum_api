@@ -1,7 +1,6 @@
 'use strict';
 const bcrypt = require('bcryptjs')
-// const { faker } = require('@faker-js/faker')
-import { faker } from 'https://cdn.skypack.dev/@faker-js/faker'
+const faker = require('faker')
 
 module.exports = {
   async up(queryInterface, Sequelize) {
