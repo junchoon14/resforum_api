@@ -32,14 +32,14 @@ module.exports = {
         Array.from({ length: 50 }).map(d =>
         ({
           name: faker.name.findName(),
-          tel: faker.phone.phoneNumber('+886-9##-###-###'),
+          tel: faker.phone.phoneNumber(),
           address: faker.address.streetAddress(),
-          opening_hours: faker.time.recent('abbr'),
+          opening_hours: '08:00',
           image: faker.image.imageUrl(),
-          description: faker.lorem.paragraph(),
+          description: faker.lorem.text(),
           createdAt: new Date(),
           updatedAt: new Date(),
-          // CategoryId: Math.floor(Math.random() * 5) + 1
+          CategoryId: Math.floor(Math.random() * 5) + 1
         })
         ), {})
     } catch (err) {
