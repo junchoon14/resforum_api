@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^6.2.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
     "connect-flash": "^0.1.1",
@@ -25,8 +26,5 @@
     "passport-local": "^1.0.0",
     "sequelize": "^6.19.0",
     "sequelize-cli": "^6.4.1"
-  },
-  "devDependencies": {
-    "faker": "^5.5.3"
   }
 }

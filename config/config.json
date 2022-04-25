@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": null,
+    "password": "Js279162!",
     "database": "restaurant_forum",
     "host": "127.0.0.1",
     "dialect": "mysql"

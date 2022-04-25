@@ -1,6 +1,6 @@
 'use strict';
 const bcrypt = require('bcryptjs')
-const faker = require('faker')
+const { faker } = require('@faker-js/faker')
 
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -32,14 +32,14 @@ module.exports = {
         Array.from({ length: 50 }).map(d =>
         ({
           name: faker.name.findName(),
-          tel: faker.phone.phoneNumber(),
+          tel: faker.phone.phoneNumber('+886-9##-###-###'),
           address: faker.address.streetAddress(),
           opening_hours: '08:00',
           image: faker.image.imageUrl(),
-          description: faker.lorem.text(),
+          description: faker.lorem.paragraph(),
           createdAt: new Date(),
           updatedAt: new Date(),
-          CategoryId: Math.floor(Math.random() * 5) + 1
+          // CategoryId: Math.floor(Math.random() * 5) + 1
         })
         ), {})
     } catch (err) {
