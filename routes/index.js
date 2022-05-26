@@ -2,8 +2,21 @@ const restController = require('../controllers/restController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController.js')
 
+const path = require('path')
 const multer = require('multer')
-const upload = multer({ dest: 'temp/' })
+const upload = multer({
+  dest: 'temp/',
+  limits: {
+    fileSize: 2 * 1024 * 1024,
+  },
+  fileFilter(req, file, cb) {
+    const ext = path.extname(file.originalname).toLowerCase()
+    if (ext !== '.jpg' && ext !== '.png' && ext !== '.jpeg') {
+      cb('檔案格式錯誤，僅限上傳 jpg、jpeg 與 png 格式。');
+    }
+    cb(null, true);
+  },
+})
 
 module.exports = (app, passport) => {
   const authenticated = (req, res, next) => {
