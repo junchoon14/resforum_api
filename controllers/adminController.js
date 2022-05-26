@@ -1,18 +1,4 @@
-const { Restaurant } = require('../models')
-// const multer = require('multer')
-// const upload = multer({
-//   limits: {
-//     fileSize: 2 * 1024 * 1024,
-//   },
-//   fileFilter(req, file, cb) {
-//     const ext = path.extname(file.originalname).toLowerCase();
-//     if (ext !== '.jpg' && ext !== '.png' && ext !== '.jpeg') {
-//       cb('檔案格式錯誤，僅限上傳 jpg、jpeg 與 png 格式。');
-//     }
-//     cb(null, true);
-//   },
-// }).any()
-
+const { Restaurant, Category } = require('../models')
 const fs = require('fs')
 const { ImgurClient } = require('imgur')
 const IMGUR_CLIENT_ID = '8542a2f1aeb6209'
@@ -26,7 +12,7 @@ const adminController = {
       const restaurants = await Restaurant.findAll({
         raw: true,
         nest: true,
-        // include: [Category]
+        include: [Category]
       })
       return res.render('admin/restaurants', { restaurants })
     } catch (err) {
@@ -35,13 +21,11 @@ const adminController = {
   },
   createRestaurant: async (req, res) => {
     try {
-      // const categories = await Category.findAll({
-      //   raw: true,
-      //   nest: true
-      // })
-      return res.render('admin/create', {
-        //  categories 
+      const categories = await Category.findAll({
+        raw: true,
+        nest: true
       })
+      return res.render('admin/create', { categories })
     } catch (err) {
       console.warn(err)
     }
@@ -53,48 +37,38 @@ const adminController = {
         return res.redirect('back')
       }
 
-      const { file } = req // equal to const file = req.file
+      const { file } = req
       if (file) {
-        // fs.readFile(file.path, (err, data) => {
-        //   if (err) console.log('Error: ', err)
-        //   fs.writeFile(`upload/${file.originalname}`, data, () => {
-        //     return Restaurant.create({
-        //       name: req.body.name,
-        //       tel: req.body.tel,
-        //       address: req.body.address,
-        //       opening_hours: req.body.opening_hours,
-        //       description: req.body.description,
-        //       image: file ? `/upload/${file.originalname}` : null
-        //     }).then((restaurant) => {
-        //       req.flash('success_messages', 'restaurant was successfully created')
-        //       return res.redirect('/admin/restaurants')
-        //     })
-        //   })
-        // })
         const client = new ImgurClient({
           clientId: IMGUR_CLIENT_ID,
           clientSecret: IMGUR_CLIENT_SECRET,
           refreshToken: IMGUR_REFRESH_TOKEN,
         })
-        const response = await client.upload({
-          image: createReadStream(file.path),
+        const imgurRes = await client.upload({
+          image: fs.createReadStream(file.path),
           type: 'stream',
           album: IMGUR_ALBUM_ID
         })
-        console.log(response.data)
-        // } else {
-        //   return Restaurant.create({
-        //     name: req.body.name,
-        //     tel: req.body.tel,
-        //     address: req.body.address,
-        //     opening_hours: req.body.opening_hours,
-        //     description: req.body.description,
-        //     image: null
-        //   }).then((restaurant) => {
-        //     req.flash('success_messages', 'restaurant was successfully created')
-        //     return res.redirect('/admin/restaurants')
-        //   })
+        await Restaurant.create({
+          name: req.body.name,
+          tel: req.body.tel,
+          address: req.body.address,
+          opening_hours: req.body.opening_hours,
+          description: req.body.description,
+          image: imgurRes ? imgurRes.data.link : null
+        })
+      } else {
+        await Restaurant.create({
+          name: req.body.name,
+          tel: req.body.tel,
+          address: req.body.address,
+          opening_hours: req.body.opening_hours,
+          description: req.body.description,
+          image: null
+        })
       }
+      req.flash('success_messages', 'restaurant was successfully created')
+      return res.redirect('/admin/restaurants')
     } catch (err) {
       console.warn(err)
     }
@@ -104,7 +78,7 @@ const adminController = {
       const restaurant = await Restaurant.findByPk(req.params.id, {
         raw: true,
         nest: true,
-        // include: [Category] 
+        include: [Category]
       })
       return res.render('admin/restaurant', { restaurant })
     } catch (err) {
