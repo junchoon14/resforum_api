@@ -55,7 +55,8 @@ const adminController = {
           address: req.body.address,
           opening_hours: req.body.opening_hours,
           description: req.body.description,
-          image: imgurRes ? imgurRes.data.link : null
+          image: imgurRes ? imgurRes.data.link : null,
+          CategoryId: req.body.categoryId
         })
       } else {
         await Restaurant.create({
@@ -64,7 +65,8 @@ const adminController = {
           address: req.body.address,
           opening_hours: req.body.opening_hours,
           description: req.body.description,
-          image: null
+          image: null,
+          CategoryId: req.body.categoryId
         })
       }
       req.flash('success_messages', 'restaurant was successfully created')
@@ -115,7 +117,8 @@ const adminController = {
           address: req.body.address,
           opening_hours: req.body.opening_hours,
           description: req.body.description,
-          image: imgurRes ? imgurRes.data.link : restaurant.image
+          image: imgurRes ? imgurRes.data.link : restaurant.image,
+          CategoryId: req.body.categoryId
         })
       } else {
         req.flash('error_messages', "Restaurant didn't exist")
@@ -129,7 +132,8 @@ const adminController = {
           address: req.body.address,
           opening_hours: req.body.opening_hours,
           description: req.body.description,
-          image: restaurant.image
+          image: restaurant.image,
+          CategoryId: req.body.categoryId
         })
       } else {
         req.flash('error_messages', "Restaurant didn't exist")
