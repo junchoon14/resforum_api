@@ -3,7 +3,7 @@ const { create } = require('express-handlebars') //ver 6.0
 const hbs = create({
   // partialsDir: 'views/partials',
   defaultLayout: 'main',
-  // helpers: require('./config/hbs-helpers'),
+  helpers: require('./config/hbs-helpers'),
   extname: '.hbs'
 })
 const bodyParser = require('body-parser')
