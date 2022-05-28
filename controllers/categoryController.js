@@ -46,7 +46,15 @@ const categoryController = {
       console.warn(err)
     }
   },
-
+  deleteCategory: async (req, res) => {
+    try {
+      const category = await Category.findByPk(req.params.id)
+      await category.destroy()
+      return res.redirect('/admin/categories')
+    } catch (err) {
+      console.warn(err)
+    }
+  }
 }
 
 module.exports = categoryController
