@@ -2,6 +2,7 @@ const restController = require('../controllers/restController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController.js')
 const categoryController = require('../controllers/categoryController.js')
+const commentController = require('../controllers/commentController.js')
 
 const path = require('path')
 const multer = require('multer')
@@ -54,6 +55,9 @@ module.exports = (app, passport) => {
   app.get('/admin/categories/:id', authenticatedAdmin, categoryController.getCategories)
   app.put('/admin/categories/id', authenticatedAdmin, categoryController.putCategory)
   app.delete('/admin/categories/:id', authenticatedAdmin, categoryController.deleteCategory)
+
+  app.post('/comments', authenticated, commentController.postComment)
+  app.delete('/comments/:id', authenticated, commentController.deleteComment)
 
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
