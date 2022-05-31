@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs')
-const db = require('../models')
-const User = db.User
+const { User, Favorite } = require('../models')
 
 const userController = {
   signUpPage: (req, res) => {
@@ -39,6 +38,32 @@ const userController = {
     req.flash('success_messages', '登出成功！')
     req.logout()
     res.redirect('/signin')
+  },
+
+  addFavorite: async (req, res) => {
+    try {
+      await Favorite.create({
+        UserId: req.user.id,
+        RestaurantId: req.params.id
+      })
+      return res.redirect('back')
+    } catch (err) {
+      console.warn(err)
+    }
+  },
+
+  removeFavorite: async (req, res) => {
+    try {
+      const favorite = await Favorite.findOne({
+        where: {
+          UserId: req.user.id,
+          RestaurantId: req.params.id
+        }
+      })
+      await favorite.destroy()
+    } catch (err) {
+      console.warn(err)
+    }
   }
 }
 
