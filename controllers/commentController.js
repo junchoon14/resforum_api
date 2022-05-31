@@ -8,7 +8,7 @@ const commentController = {
         RestaurantId: req.body.restaurantId,
         UserId: req.user.id
       })
-      res.redirect(`restaurant/$(req.body.restaurantId)`)
+      res.redirect(`/restaurants/${req.body.restaurantId}`)
     } catch (err) {
       console.warn(err)
     }
@@ -17,7 +17,7 @@ const commentController = {
     try {
       const comment = await Comment.findByPk(req.params.id)
       await comment.destroy()
-      res.redirect(`restaurant/$(comment.RestaurantId)`)
+      return res.redirect(`/restaurants/${comment.RestaurantId}`)
     } catch (err) {
       console.warn(err)
     }
