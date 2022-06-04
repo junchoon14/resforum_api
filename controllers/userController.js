@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
-const { User, Favorite } = require('../models')
+const { User, Favorite, Followship } = require('../models')
+const user = require('../models/user')
 
 const userController = {
   signUpPage: (req, res) => {
@@ -65,7 +66,52 @@ const userController = {
     } catch (err) {
       console.warn(err)
     }
-  }
+  },
+  getTopUser: async (req, res) => {
+    try {
+      let users = await User.findAll({
+        include: [
+          { model: User, as: 'Followers' }
+        ]
+      })
+
+      users = users.map(user => ({
+        ...user.dataValues,
+        FollowerCount: user.dataValues.Followers.length,
+        isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
+      }))
+      users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
+      console.log(users)
+      return res.render('topUser', { users })
+    } catch (err) {
+      console.warn(err)
+    }
+  },
+  addFollowing: async (req, res) => {
+    try {
+      await Followship.create({
+        followerId: req.user.id,
+        followingId: req.params.userId
+      })
+      return res.redirect('back')
+    } catch (err) {
+      console.warn(err)
+    }
+  },
+  removeFollowing: async (req, res) => {
+    try {
+      const following = await Followship.findOne({
+        where: {
+          followerId: req.user.id,
+          followingId: req.params.userId
+        }
+      })
+      await following.destroy()
+      return res.redirect('back')
+    } catch (err) {
+      console.warn(err)
+    }
+  },
 }
 
 module.exports = userController
