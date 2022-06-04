@@ -49,11 +49,14 @@ const restController = {
       const restaurant = await Restaurant.findByPk(req.params.id, {
         include: [
           Category,
+          { model: User, as: 'FavoritedUsers' },
           { model: Comment, include: [User] }
         ]
       })
-      // console.log(restaurant)
-      return res.render('restaurant', { restaurant: restaurant.toJSON() })
+      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
+      // console.log('restaurant', restaurant)
+      // console.log('toJSON()', restaurant.toJSON())
+      return res.render('restaurant', { restaurant: restaurant.toJSON(), isFavorited })
     } catch (err) {
       console.warn(err)
     }

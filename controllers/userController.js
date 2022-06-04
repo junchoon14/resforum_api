@@ -57,10 +57,11 @@ const userController = {
       const favorite = await Favorite.findOne({
         where: {
           UserId: req.user.id,
-          RestaurantId: req.params.id
+          RestaurantId: req.params.restaurantId
         }
       })
       await favorite.destroy()
+      return res.redirect('back')
     } catch (err) {
       console.warn(err)
     }
