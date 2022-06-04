@@ -44,7 +44,7 @@ const userController = {
     try {
       await Favorite.create({
         UserId: req.user.id,
-        RestaurantId: req.params.id
+        RestaurantId: req.params.restaurantId
       })
       return res.redirect('back')
     } catch (err) {

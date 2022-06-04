@@ -28,7 +28,8 @@ const restController = {
       const data = restaurants.rows.map(r => ({
         ...r,
         description: r.description.substring(0, 50),
-        categoryName: r.Category.name
+        categoryName: r.Category.name,
+        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
       }))
 
       let page = Number(req.query.page) || 1
@@ -37,7 +38,7 @@ const restController = {
       let prev = page - 1 < 0 ? 1 : page - 1
       let next = page + 1 > pages ? pages : page + 1
 
-      // console.log(data)
+      // console.log(req.user.FavoritedRestaurants)
       return res.render('restaurants', { restaurants: data, categories, categoryId, page, pages, totalPage, prev, next })
     } catch (err) {
       console.warn(err)
@@ -62,8 +63,6 @@ const restController = {
     try {
       const restaurants = await Restaurant.findAll({
         limit: 10,
-        raw: true,
-        nest: true,
         order: [['createdAt', 'DESC']],
         include: [Category]
       })
