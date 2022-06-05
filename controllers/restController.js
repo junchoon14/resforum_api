@@ -37,8 +37,6 @@ const restController = {
       let totalPage = Array.from({ length: pages }).map((item, index) => index + 1) // 產生長度符合的陣列，做出頁數陣列，[1,2,3,...]
       let prev = page - 1 < 0 ? 1 : page - 1
       let next = page + 1 > pages ? pages : page + 1
-
-      // console.log(req.user.FavoritedRestaurants)
       return res.render('restaurants', { restaurants: data, categories, categoryId, page, pages, totalPage, prev, next })
     } catch (err) {
       console.warn(err)
@@ -54,8 +52,6 @@ const restController = {
         ]
       })
       const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
-      // console.log('restaurant', restaurant)
-      // console.log('toJSON()', restaurant.toJSON())
       return res.render('restaurant', { restaurant: restaurant.toJSON(), isFavorited })
     } catch (err) {
       console.warn(err)
