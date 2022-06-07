@@ -23,7 +23,6 @@ const restController = {
         limit: pageLimit,
         offset: offset
       })
-      // console.log(restaurants)
       const categories = await Category.findAll({ raw: true })
       const data = restaurants.rows.map(r => ({
         ...r,
@@ -51,6 +50,10 @@ const restController = {
           { model: Comment, include: [User] }
         ]
       })
+      await restaurant.update({
+        ...restaurant.dataValues,
+        views: restaurant.dataValues.views ? restaurant.dataValues.views + 1 : 1
+      })
       const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
       return res.render('restaurant', { restaurant: restaurant.toJSON(), isFavorited })
     } catch (err) {
@@ -74,7 +77,6 @@ const restController = {
         order: [['createdAt', 'DESC']],
         include: [User, Restaurant]
       })
-      console.log(restaurants)
       return res.render('feeds', { restaurants, comments })
     } catch (err) {
       console.warn(err)
@@ -82,16 +84,23 @@ const restController = {
   },
   getDashboard: async (req, res) => {
     try {
-      const restaurants = await Restaurant.findByPk(req.params.id, { include: [Category] })
-      const comments = await Comment.findAll({
-        limit: 10,
-        raw: true,
-        nest: true,
-        order: [['createdAt', 'DESC']],
-        include: [User, Restaurant]
+      let restaurant = await Restaurant.findByPk(req.params.id, {
+        include: [
+          Category,
+          { model: User, as: 'FavoritedUsers' },
+          { model: Comment, include: [User] }
+        ]
       })
-      console.log(restaurants)
-      return res.render('feeds', { restaurants, comments })
+      const data = restaurant.toJSON()
+      restaurant = {
+        id: data.id,
+        name: data.name,
+        category: data.Category.name,
+        commentsNum: data.Comments.length ? data.Comments.length : 0,
+        views: data.views ? data.views : 0,
+        favoritedNum: data.FavoritedUsers.length ? data.FavoritedUsers.length : 0
+      }
+      return res.render('dashboard', { restaurant })
     } catch (err) {
       console.warn(err)
     }
