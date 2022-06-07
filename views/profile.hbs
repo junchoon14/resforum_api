@@ -1,42 +1,94 @@
-<div class="row">
-  <div class="col-md-12">
-    <h1>{{user.name}}</h1>
-  </div>
-  <div class="col-md-4">
-    <img class="img-responsive center-block" src="{{user.image}}" style="width: 250px;margin-bottom: 25px;">
-    <div class="well">
-      <ul class="list-unstyled">
-        <li><strong>Email:</strong> {{user.email}}</li>
-      </ul>
+<div class="card mb-3">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="{{user.image}}" class="img-fluid rounded-start" alt="{{user.name}}">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{user.name}}</h5>
+        <p class="card-text">{{user.email}}</p>
+        <p class="card-text">{{user.description}}</p>
+        {{!-- {{#ifcond user.id }} --}}
+        <a class="btn btn-primary" href="/users/{{user.id}}/edit">Edit</a>
+
+      </div>
     </div>
   </div>
-  <div class="col-md-8">
-    <p>{{user.description}}</p>
-
-    <button type="button" class="btn btn-link">
-      <a href="/users/{{user.id}}/edit">
-        Edit
-      </a>
-    </button>
-  </div>
-  <hr>
-</div>
-<br />
-<br />
-<h1>已評論餐廳</h1>
-<hr />
-<div class="row" style="text-align: center;">
-  {{#each user.commentedRes}}
-  <div class="col-3">
-    <a href="/restaurants/{{this.id}}">
-      <img class="" src="{{this.image}}" width="140px" height="140px">
-    </a>
-    <h2>{{this.name}}</h2>
-  </div>
-  {{/each}}
 </div>
 
+<div class="row g-2">
+  <div>
+    <div class="card m-2">
+      <div class="card-header">
+        <span class="badge bg-light">{{user.followingsNum}}</span> followings（追蹤者）
+      </div>
+      <div class="card-body row">
+        {{#each user.followings}}
+        <div class="text-center">
+          <a href="/users/{{this.id}}">
+            <img class="" src="{{this.image}}" width="100px" height="100px">
+            <h6>{{this.name}}</h6>
+          </a>
+        </div>
+        {{/each}}
+      </div>
+    </div>
 
-<br />
+    <div class="card m-2">
+      <div class="card-header">
+        <span class="badge bg-light">{{user.followersNum}}</span> folllowers（追隨者）
+      </div>
+      <div class="card-body">
+        <div class="card-body">
+          {{#each user.followers}}
+          <div class="text-center">
+            <a href="/users/{{this.id}}">
+              <img class="" src="{{this.image}}" width="100px" height="100px">
+              <h6>{{this.name}}</h6>
+            </a>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="card m-2">
+      <div class="card-header">
+        <span class="badge bg-light">{{user.commentedResNum}}</span> 已評論餐廳
+      </div>
+      <div class="card-body">
+        <div class="card-body row">
+          {{#each user.commentedRes}}
+          <div class="text-center">
+            <a href="/restaurants/{{this.id}}">
+              <img class="" src="{{this.image}}" width="100px" height="100px">
+              <h6>{{this.name}}</h6>
+            </a>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+
+    <div class="card m-2">
+      <div class="card-header">
+        <span class="badge bg-light">{{user.favoritedResNum}}</span> 收藏的餐廳
+      </div>
+      <div class="card-body row">
+        {{#each user.favoritedRes}}
+        <div class="text-center">
+          <a href="/restaurants/{{this.id}}">
+            <img class="" src="{{this.image}}" width="100px" height="100px">
+            <h6>{{this.name}}</h6>
+          </a>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
+</div>
 
 <a href="javascript:history.back()">回上一頁</a>

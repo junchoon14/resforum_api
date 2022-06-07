@@ -44,10 +44,27 @@ const userController = {
   getUser: async (req, res) => {
     try {
       let user = await User.findByPk(req.params.id, {
-        include: [{ model: Comment, include: [Restaurant] }]
+        include: [
+          { model: User, as: 'Followers' },
+          { model: User, as: 'Followings' },
+          { model: Restaurant, as: 'FavoritedRestaurants' },
+          { model: Comment, include: [Restaurant] },
+
+        ]
       })
       const data = user.toJSON()
-      const commentedRes = data.Comments.map(c => c.Restaurant)
+      const commentedRes = data.Comments.map(c => c.Restaurant) || []
+      const followers = data.Followers.map(f => ({
+        id: f.id,
+        name: f.name,
+        image: f.image
+      })) || []
+      const followings = data.Followings.map(f => ({
+        id: f.id,
+        name: f.name,
+        image: f.image
+      })) || []
+
       user = {
         id: data.id,
         name: data.name,
@@ -55,8 +72,14 @@ const userController = {
         image: data.image,
         description: data.description,
         isAdmin: data.isAdmin,
+        followers: followers ? followers : [],
+        followersNum: followers.length ? followers.length : 0,
+        followings: followings ? followings : [],
+        followingsNum: followings.length ? followings.length : 0,
         commentedRes: commentedRes,
-        commentedResNum: commentedRes.length
+        commentedResNum: commentedRes.length ? commentedRes.length : 0,
+        favoritedRes: data.FavoritedRestaurants ? data.FavoritedRestaurants : [],
+        favoritedResNum: data.FavoritedRestaurants.length ? data.FavoritedRestaurants.length : 0
       }
       return res.render('profile', { user })
     } catch (err) {
