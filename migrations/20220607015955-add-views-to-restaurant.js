@@ -3,7 +3,8 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     return await queryInterface.addColumn('Restaurants', 'views', {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
     })
     /**
      * Add altering commands here.
