@@ -1,9 +1,9 @@
-const categoryService = require('../services/categoryService.js')
+const categoryService = require('../../services/categoryService.js')
 
 const categoryController = {
   getCategories: async (req, res) => {
     categoryService.getCategories(req, res, (data) => {
-      return res.render('admin/categories', data)
+      return res.json(data)
     })
   },
   postCategory: async (req, res) => {
