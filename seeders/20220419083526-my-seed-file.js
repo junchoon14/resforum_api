@@ -10,6 +10,8 @@ module.exports = {
         password: bcrypt.hashSync('12345678', bcrypt.genSaltSync(10), null),
         isAdmin: true,
         name: 'root',
+        description: '',
+        image: '',
         createdAt: new Date(),
         updatedAt: new Date()
       }, {
@@ -17,6 +19,8 @@ module.exports = {
         password: bcrypt.hashSync('12345678', bcrypt.genSaltSync(10), null),
         isAdmin: false,
         name: 'user1',
+        description: '',
+        image: '',
         createdAt: new Date(),
         updatedAt: new Date()
       }, {
@@ -24,6 +28,8 @@ module.exports = {
         password: bcrypt.hashSync('12345678', bcrypt.genSaltSync(10), null),
         isAdmin: false,
         name: 'user2',
+        description: '',
+        image: '',
         createdAt: new Date(),
         updatedAt: new Date()
       }], {})
@@ -37,6 +43,7 @@ module.exports = {
           opening_hours: '08:00',
           image: faker.image.imageUrl(),
           description: faker.lorem.paragraph(),
+          views: 0,
           createdAt: new Date(),
           updatedAt: new Date(),
           CategoryId: Math.floor(Math.random() * 5) + 1
