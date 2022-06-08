@@ -14,7 +14,19 @@ const adminService = {
     } catch (err) {
       console.warn(err)
     }
-  }
+  },
+  getRestaurant: async (req, res, callback) => {
+    try {
+      const restaurant = await Restaurant.findByPk(req.params.id, {
+        raw: true,
+        nest: true,
+        include: [Category]
+      })
+      callback({ restaurant })
+    } catch (err) {
+      console.warn(err)
+    }
+  },
 
 }
 
