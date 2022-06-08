@@ -1,14 +1,10 @@
 const adminService = require('../services/adminService.js')
 
 const adminController = {
-  getRestaurants: async (req, res) => {
-    try {
-      await adminService.getRestaurants(req, res, (data => {
-        return res.render('admin/restaurants', data)
-      }))
-    } catch (err) {
-      console.warn(err)
-    }
+  getRestaurants: (req, res) => {
+    adminService.getRestaurants(req, res, (data) => {
+      return res.render('admin/restaurants', data)
+    })
   },
   createRestaurant: async (req, res) => {
     try {
