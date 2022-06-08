@@ -1,16 +1,11 @@
-const { Restaurant, Category } = require('../models')
-const fs = require('fs')
-const { ImgurClient } = require('imgur')
+const adminService = require('../services/adminService.js')
 
 const adminController = {
   getRestaurants: async (req, res) => {
     try {
-      const restaurants = await Restaurant.findAll({
-        raw: true,
-        nest: true,
-        include: [Category]
-      })
-      return res.render('admin/restaurants', { restaurants })
+      await adminService.getRestaurants(req, res, (data => {
+        return res.render('admin/restaurants', data)
+      }))
     } catch (err) {
       console.warn(err)
     }
