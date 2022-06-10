@@ -24,18 +24,15 @@ const upload = multer({
   },
 })
 
-const authenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next()
-  }
-  res.redirect('/signin')
-}
+const authenticated = passport.authenticate('jwt', { session: false })
+
 const authenticatedAdmin = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  if (req.user) {
     if (req.user.isAdmin) { return next() }
-    return res.redirect('/')
+    return res.json({ status: 'error', message: 'permission denied' })
+  } else {
+    return res.json({ status: 'error', message: 'permission denied' })
   }
-  res.redirect('/signin')
 }
 
 router.get('/', authenticated, (req, res) => {
@@ -62,16 +59,16 @@ router.post('/following/:userId', authenticated, userController.addFollowing)
 router.delete('/following/:userId', authenticated, userController.removeFollowing)
 
 
-router.get('/admin', authenticatedAdmin, (req, res) => {
+router.get('/admin', authenticated, authenticatedAdmin, (req, res) => {
   res.redirect('/admin/restaurants')
 })
-router.get('/admin/restaurants', adminController.getRestaurants)
-router.get('/admin/restaurants/create', adminController.createRestaurant)
-router.post('/admin/restaurants', upload.single('image'), adminController.postRestaurant)
-router.get('/admin/restaurants/:id', adminController.getRestaurant)
-router.get('/admin/restaurants/:id/edit', adminController.editRestaurant)
-router.put('/admin/restaurants/:id', upload.single('image'), adminController.putRestaurant)
-router.delete('/admin/restaurants/:id', adminController.deleteRestaurant)
+router.get('/admin/restaurants', authenticated, authenticatedAdmin, adminController.getRestaurants)
+router.get('/admin/restaurants/create', authenticated, authenticatedAdmin, adminController.createRestaurant)
+router.post('/admin/restaurants', authenticated, authenticatedAdmin, upload.single('image'), adminController.postRestaurant)
+router.get('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.getRestaurant)
+router.get('/admin/restaurants/:id/edit', authenticated, authenticatedAdmin, adminController.editRestaurant)
+router.put('/admin/restaurants/:id', authenticated, authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
+router.delete('/admin/restaurants/:id', authenticated, authenticatedAdmin, adminController.deleteRestaurant)
 
 router.get('/admin/categories', categoryController.getCategories)
 router.post('/admin/categories', categoryController.postCategory)
@@ -79,11 +76,11 @@ router.get('/admin/categories/:id', categoryController.getCategories)
 router.put('/admin/categories/id', categoryController.putCategory)
 router.delete('/admin/categories/:id', categoryController.deleteCategory)
 
-router.get('/signup', userController.signUpPage)
-router.post('/signup', userController.signUp)
-router.get('/signin', userController.signInPage)
-router.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
-router.get('/logout', userController.logout)
+// router.get('/signup', userController.signUpPage)
+// router.post('/signup', userController.signUp)
+// router.get('/signin', userController.signInPage)
+router.post('/signin', userController.signIn)
+// router.get('/logout', userController.logout)
 
 
 module.exports = router
