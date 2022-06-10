@@ -9,16 +9,14 @@ const hbs = create({
 const bodyParser = require('body-parser')
 const flash = require('connect-flash')
 const session = require('express-session')
-const passport = require('./config/passport')
 const methodOverride = require('method-override')
 const db = require('./models')
-
 const app = express()
 const port = process.env.PORT || 3000
-
 if (process.env.NODE_ENV !== 'production') {      // 如果不是 production 模式
   require('dotenv').config()                      // 使用 dotenv 讀取 .env 檔案
 }
+const passport = require('./config/passport')
 
 app.engine('.hbs', hbs.engine)
 app.set('view engine', '.hbs')
