@@ -76,11 +76,9 @@ router.get('/admin/categories/:id', categoryController.getCategories)
 router.put('/admin/categories/id', categoryController.putCategory)
 router.delete('/admin/categories/:id', categoryController.deleteCategory)
 
-// router.get('/signup', userController.signUpPage)
-// router.post('/signup', userController.signUp)
-// router.get('/signin', userController.signInPage)
+router.post('/signup', userController.signUp)
 router.post('/signin', userController.signIn)
-// router.get('/logout', userController.logout)
+// router.get('/logout', userController.logout) //前端可自行處理登出功能，後端不需要製作 logout 的 API
 
 
 module.exports = router
