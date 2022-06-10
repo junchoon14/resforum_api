@@ -86,6 +86,49 @@ const adminService = {
       console.warn(err)
     }
   },
+  putRestaurant: async (req, res, callback) => {
+    try {
+      if (!req.body.name) {
+        callback({ status: 'error', message: "Name didn't exist" })
+      }
+      const { file } = req
+      const restaurant = await Restaurant.findByPk(req.params.id)
+      if (file) {
+        const client = new ImgurClient({
+          clientId: process.env.IMGUR_CLIENT_ID,
+          clientSecret: process.env.IMGUR_CLIENT_SECRET,
+          refreshToken: process.env.IMGUR_REFRESH_TOKEN,
+        })
+        const imgurRes = await client.upload({
+          image: fs.createReadStream(file.path),
+          type: 'stream',
+          album: process.env.IMGUR_ALBUM_ID
+        })
+        await restaurant.update({
+          name: req.body.name,
+          tel: req.body.tel,
+          address: req.body.address,
+          opening_hours: req.body.opening_hours,
+          description: req.body.description,
+          image: imgurRes ? imgurRes.data.link : restaurant.image,
+          CategoryId: req.body.categoryId
+        })
+      } else {
+        await restaurant.update({
+          name: req.body.name,
+          tel: req.body.tel,
+          address: req.body.address,
+          opening_hours: req.body.opening_hours,
+          description: req.body.description,
+          image: restaurant.image,
+          CategoryId: req.body.categoryId
+        })
+      }
+      callback({ status: 'success', message: 'Restaurant was successfully to updat' })
+    } catch (err) {
+      console.warn(err)
+    }
+  },
   deleteRestaurant: async (req, res, callback) => {
     try {
       const restaurant = await Restaurant.findByPk(req.params.id)
@@ -94,8 +137,7 @@ const adminService = {
     } catch (err) {
       console.warn(err)
     }
-  },
-
+  }
 }
 
 module.exports = adminService
