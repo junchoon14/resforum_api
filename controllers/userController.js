@@ -1,3 +1,4 @@
+const userService = require('../userService')
 const bcrypt = require('bcryptjs')
 const { User, Restaurant, Comment, Favorite, Followship } = require('../models')
 const fs = require('fs')
@@ -41,170 +42,56 @@ const userController = {
     req.logout()
     res.redirect('/signin')
   },
-  getUser: async (req, res) => {
-    try {
-      let user = await User.findByPk(req.params.id, {
-        include: [
-          { model: User, as: 'Followers' },
-          { model: User, as: 'Followings' },
-          { model: Restaurant, as: 'FavoritedRestaurants' },
-          { model: Comment, include: [Restaurant] },
-
-        ]
-      })
-      const data = user.toJSON()
-      const commentedRes = data.Comments.map(c => c.Restaurant) || []
-      const followers = data.Followers.map(f => ({
-        id: f.id,
-        name: f.name,
-        image: f.image
-      })) || []
-      const followings = data.Followings.map(f => ({
-        id: f.id,
-        name: f.name,
-        image: f.image
-      })) || []
-
-      user = {
-        id: data.id,
-        name: data.name,
-        email: data.email,
-        image: data.image,
-        description: data.description,
-        isAdmin: data.isAdmin,
-        followers: followers ? followers : [],
-        followersNum: followers.length ? followers.length : 0,
-        followings: followings ? followings : [],
-        followingsNum: followings.length ? followings.length : 0,
-        commentedRes: commentedRes,
-        commentedResNum: commentedRes.length ? commentedRes.length : 0,
-        favoritedRes: data.FavoritedRestaurants ? data.FavoritedRestaurants : [],
-        favoritedResNum: data.FavoritedRestaurants.length ? data.FavoritedRestaurants.length : 0
-      }
-      return res.render('profile', { user })
-    } catch (err) {
-      console.warn(err)
-    }
+  //from userService.js
+  getUser: (req, res) => {
+    userService.getUser(req, res, (data) => {
+      res.render('profile', data)
+    })
   },
-  editUser: async (req, res) => {
-    try {
-      const user = await User.findByPk(req.params.id, { raw: true })
-      return res.render('editProfile', { user })
-    } catch (err) {
-      console.warn(err)
-    }
+  editUser: (req, res) => {
+    userService.editUser(req, res, (data) => {
+      res.render('editProfile', data)
+    })
   },
-  putUser: async (req, res) => {
-    try {
-      if (!req.body.name) {
-        req.flash('error_messages', "name didn't exist")
+  putUser: (req, res) => {
+    userService.editUser(req, res, (data) => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message'])
         return res.redirect('back')
       }
-      const { file } = req
-      const user = await User.findByPk(req.params.id)
-      if (file) {
-        const client = new ImgurClient({
-          clientId: process.env.IMGUR_CLIENT_ID,
-          clientSecret: process.env.IMGUR_CLIENT_SECRET,
-          refreshToken: process.env.IMGUR_REFRESH_TOKEN,
-        })
-        const imgurUser = await client.upload({
-          image: fs.createReadStream(file.path),
-          type: 'stream',
-          album: process.env.IMGUR_ALBUM_ID
-        })
-        await user.update({
-          ...user,
-          name: req.body.name,
-          email: req.body.email,
-          description: req.body.description,
-          image: imgurUser ? imgurUser.data.link : user.image
-        })
-      } else {
-        await user.update({
-          ...user,
-          name: req.body.name,
-          email: req.body.email,
-          description: req.body.description,
-          image: user.image
-        })
-      }
-      req.flash('success_messages', 'Profile was successfully to update')
-      res.redirect(`/users/${user.id}`)
-    } catch (err) {
-      console.warn(err)
-    }
+      req.flash('success_messages', data['message'])
+      res.redirect(`/users/${data.userId}`)
+    })
   },
-  addFavorite: async (req, res) => {
-    try {
-      await Favorite.create({
-        UserId: req.user.id,
-        RestaurantId: req.params.restaurantId
-      })
+  addFavorite: (req, res) => {
+    userService.addFavorite(req, res, (data) => {
+      req.flash('success_messages', data['message'])
       return res.redirect('back')
-    } catch (err) {
-      console.warn(err)
-    }
+    })
   },
-
-  removeFavorite: async (req, res) => {
-    try {
-      const favorite = await Favorite.findOne({
-        where: {
-          UserId: req.user.id,
-          RestaurantId: req.params.restaurantId
-        }
-      })
-      await favorite.destroy()
+  removeFavorite: (req, res) => {
+    userService.removeFavorite(req, res, (data) => {
+      req.flash('success_messages', data['message'])
       return res.redirect('back')
-    } catch (err) {
-      console.warn(err)
-    }
+    })
   },
-  getTopUser: async (req, res) => {
-    try {
-      let users = await User.findAll({
-        include: [
-          { model: User, as: 'Followers' }
-        ]
-      })
-
-      users = users.map(user => ({
-        ...user.dataValues,
-        FollowerCount: user.dataValues.Followers.length,
-        isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
-      }))
-      users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
-      return res.render('topUser', { users })
-    } catch (err) {
-      console.warn(err)
-    }
+  getTopUser: (req, res) => {
+    userService.getTopUser(req, res, (data) => {
+      return res.render('topUser', data)
+    })
   },
-  addFollowing: async (req, res) => {
-    try {
-      await Followship.create({
-        followerId: req.user.id,
-        followingId: req.params.userId
-      })
+  addFollowing: (req, res) => {
+    userService.addFollowing(req, res, (data) => {
+      req.flash('success_messages', data['message'])
       return res.redirect('back')
-    } catch (err) {
-      console.warn(err)
-    }
+    })
   },
-  removeFollowing: async (req, res) => {
-    try {
-      const following = await Followship.findOne({
-        where: {
-          followerId: req.user.id,
-          followingId: req.params.userId
-        }
-      })
-      await following.destroy()
+  removeFollowing: (req, res) => {
+    userService.removeFollowing(req, res, (data) => {
+      req.flash('success_messages', data['message'])
       return res.redirect('back')
-    } catch (err) {
-      console.warn(err)
-    }
-  },
+    })
+  }
 }
 
 module.exports = userController
