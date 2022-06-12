@@ -1,6 +1,6 @@
 const { Comment } = require('../models')
 
-const commentController = {
+const commentService = {
   postComment: async (req, res, callback) => {
     try {
       await Comment.create({
@@ -24,4 +24,4 @@ const commentController = {
   },
 }
 
-module.exports = commentController
+module.exports = commentService
