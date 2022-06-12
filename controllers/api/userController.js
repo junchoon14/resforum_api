@@ -1,7 +1,7 @@
 const userService = require('../../services/userService.js')
 
 const bcrypt = require('bcryptjs')
-const { User, Restaurant, Comment, Favorite, Followship } = require('../../models')
+const { User } = require('../../models')
 const fs = require('fs')
 const { ImgurClient } = require('imgur')
 
