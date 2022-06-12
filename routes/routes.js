@@ -50,8 +50,8 @@ router.get('/restaurants/:id/dashboard', authenticated, restController.getDashbo
 router.get('/restaurants/:id', authenticated, restController.getRestaurant)
 
 router.get('/users/top', authenticated, userController.getTopUser)
-router.get('/users/:id', authenticated, userController.getUser)
 router.get('/users/:id/edit', authenticated, userController.editUser)
+router.get('/users/:id', authenticated, userController.getUser)
 router.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 
 router.post('/comments', authenticated, commentController.postComment)

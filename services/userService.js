@@ -56,10 +56,13 @@ const userService = {
       console.warn(err)
     }
   },
-  putUser: async (req, res) => {
+  putUser: async (req, res, callback) => {
     try {
       if (!req.body.name) {
         return callback({ status: 'error', message: "Name didn't exit" })
+      }
+      if (!req.body.email) {
+        return callback({ status: 'error', message: "Email didn't exit" })
       }
       const { file } = req
       const user = await User.findByPk(req.params.id)
@@ -90,7 +93,7 @@ const userService = {
           image: user.image
         })
       }
-      return callback({ userId: user.id, status: 'success', message: 'Profile was successfully to update' })
+      return callback({ status: 'success', message: 'Profile was successfully to update' })
     } catch (err) {
       console.warn(err)
     }
@@ -165,4 +168,4 @@ const userService = {
   }
 }
 
-moduke.exports = userService
+module.exports = userService

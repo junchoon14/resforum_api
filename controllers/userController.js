@@ -1,8 +1,6 @@
-const userService = require('../userService')
+const userService = require('../services/userService.js')
 const bcrypt = require('bcryptjs')
-const { User, Restaurant, Comment, Favorite, Followship } = require('../models')
-const fs = require('fs')
-const { ImgurClient } = require('imgur')
+const { User } = require('../models')
 
 const userController = {
   signUpPage: (req, res) => {
@@ -54,13 +52,13 @@ const userController = {
     })
   },
   putUser: (req, res) => {
-    userService.editUser(req, res, (data) => {
+    userService.putUser(req, res, (data) => {
       if (data['status'] === 'error') {
         req.flash('error_messages', data['message'])
         return res.redirect('back')
       }
       req.flash('success_messages', data['message'])
-      res.redirect(`/users/${data.userId}`)
+      return res.redirect(`/users/${req.user.id}`)
     })
   },
   addFavorite: (req, res) => {

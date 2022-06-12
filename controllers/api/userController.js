@@ -1,4 +1,4 @@
-const userService = require('../../userService.js')
+const userService = require('../../services/userService.js')
 
 const bcrypt = require('bcryptjs')
 const { User, Restaurant, Comment, Favorite, Followship } = require('../../models')
