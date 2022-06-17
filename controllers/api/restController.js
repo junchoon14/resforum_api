@@ -2,7 +2,7 @@ const restService = require('../../services/restService.js')
 
 const restController = {
   getRestaurants: (req, res) => {
-    restService.getFeeds(req, res, (data) => res.json(data))
+    restService.getRestaurants(req, res, (data) => res.json(data))
   },
   getRestaurant: (req, res) => {
     restService.getRestaurant(req, res, (data) => res.json(data))
