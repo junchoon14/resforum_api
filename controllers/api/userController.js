@@ -15,7 +15,7 @@ const userController = {
         return res.json({ status: 'error', message: '兩次密碼輸入不同' })
       }
       const checkUser = await User.findOne({ where: { email: req.body.email } })
-      if (!checkUser) {
+      if (checkUser) {
         return res.json({ status: 'error', message: '信箱重複！' })
       }
       await User.create({
