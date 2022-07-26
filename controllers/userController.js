@@ -13,7 +13,7 @@ const userController = {
         return res.redirect('/signup')
       }
       const checkUser = User.findOne({ where: { email: req.body.email } })
-      if (!checkUser) {
+      if (checkUser) {
         req.flash('error_messages', '信箱重複！')
         return res.redirect('/signup')
       }
