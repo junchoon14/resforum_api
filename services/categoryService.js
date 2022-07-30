@@ -38,7 +38,9 @@ const categoryService = {
         callback({ status: 'error', message: "Name didn't exit" })
       }
       const category = await Category.findByPk(req.params.id)
-      await category.update(req.body)
+      await category.update({
+        name: req.body.name
+      })
       callback({ status: 'success', message: 'Category was successfully updated' })
     } catch (err) {
       console.warn(err)
