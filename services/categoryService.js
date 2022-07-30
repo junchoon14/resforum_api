@@ -12,8 +12,8 @@ const categoryService = {
           raw: true,
           nest: true
         })
-        callback({ categories, category })
-      }
+        return callback({ categories, category })
+      } 
       callback({ categories })
     } catch (err) {
       console.warn(err)
