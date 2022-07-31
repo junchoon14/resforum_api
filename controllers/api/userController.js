@@ -74,6 +74,11 @@ const userController = {
       return res.json(data)
     })
   },
+  getCurrentUser: (req, res) => {
+    userService.getCurrentUser(req, res, (data) => {
+      return res.json(data)
+    })
+  },
   addFavorite: (req, res) => {
     userService.addFavorite(req, res, (data) => {
       return res.json(data)
