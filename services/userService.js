@@ -100,8 +100,10 @@ const userService = {
   },
   getCurrentUser: (req, res, callback) => {
     if (req.user) {
-      const currentUser = req.user
-      return callback({ currentUser })
+      const user = {
+        ...req.user
+      }
+      return callback({ user })
     } else {
       return callback({ status: 'error', message: "Current User didn't exit" })
     }
