@@ -35,6 +35,8 @@ const authenticatedAdmin = (req, res, next) => {
   }
 }
 
+router.get('/get_current_user', authenticated, userController.getCurrentUser)
+
 router.get('/', authenticated, (req, res) => {
   res.redirect('/restaurants')
 })
@@ -73,11 +75,8 @@ router.get('/admin/categories/:id', categoryController.getCategories)
 router.put('/admin/categories/:id', categoryController.putCategory)
 router.delete('/admin/categories/:id', categoryController.deleteCategory)
 
-
 router.post('/signup', userController.signUp)
 router.post('/signin', userController.signIn)
-
-router.get('/get_current_user', userController.getCurrentUser)
 // router.get('/logout', userController.logout) //前端可自行處理登出功能，後端不需要製作 logout 的 API
 
 

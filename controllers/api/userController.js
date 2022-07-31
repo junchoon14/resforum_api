@@ -75,8 +75,12 @@ const userController = {
     })
   },
   getCurrentUser: (req, res) => {
-    userService.getCurrentUser(req, res, (data) => {
-      return res.json(data)
+    return res.json({
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email,
+      image: req.user.image,
+      isAdmin: req.user.isAdmin
     })
   },
   addFavorite: (req, res) => {

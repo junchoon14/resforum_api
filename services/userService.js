@@ -98,16 +98,6 @@ const userService = {
       console.warn(err)
     }
   },
-  getCurrentUser: (req, res, callback) => {
-    if (req.user) {
-      const user = {
-        ...req.user
-      }
-      return callback({ user })
-    } else {
-      return callback({ status: 'error', message: "Current User didn't exit" })
-    }
-  },
   addFavorite: async (req, res, callback) => {
     try {
       await Favorite.create({
