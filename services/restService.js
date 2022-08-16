@@ -49,13 +49,11 @@ const restService = {
           { model: Comment, include: [User] }
         ]
       })
-      console.log('restaurant', restaurant)
       await restaurant.update({
-        // ...restaurant.dataValues, // 會遺失資料的時間資訊
+        // ...restaurant.dataValues, // 會遺失Comments資料的時間資訊
         views: restaurant.dataValues.views ? restaurant.dataValues.views + 1 : 1
       })
       const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
-      console.log('restaurant', restaurant)
       callback({ restaurant: restaurant.toJSON(), isFavorited })
     } catch (err) {
       console.warn(err)
